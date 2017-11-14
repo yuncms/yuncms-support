@@ -117,11 +117,10 @@ class SupportController extends Controller
             'model' => get_class($source),
         ];
 
-        $support = Support::create($data);
-        if ($support) {
+        $support = new Support($data);
+        if ($support->save(false)) {
             $source->updateCounters(['supports' => 1]);
         }
-        $support->save();
         return ['status' => 'success'];
     }
 }
