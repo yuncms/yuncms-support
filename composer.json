@@ -1,0 +1,55 @@
+{
+  "name": "yuncms/yuncms-support",
+  "description": "The support module for the yuncms",
+  "keywords": [
+    "support",
+    "yii2",
+    "yii2-module"
+  ],
+  "type": "yii2-extension",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Xu TL",
+      "email": "xutongle@gmail.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "~2.0.6",
+    "yuncms/yuncms-user": "~2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "yuncms\\support\\": ""
+    }
+  },
+  "extra": {
+    "yuncms": {
+      "name": "support",
+      "i18n": {
+        "class": "yii\\i18n\\PhpMessageSource",
+        "sourceLanguage": "en-US",
+        "basePath": "@yuncms/support/messages"
+      },
+      "migrationNamespace": "yuncms\\support\\migrations",
+      "backend": {
+      },
+      "frontend": {
+        "class": "yuncms\\support\\frontend\\Module"
+      }
+    },
+    "branch-alias": {
+      "dev-master": "2.0-dev"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    },
+    {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  ]
+}
