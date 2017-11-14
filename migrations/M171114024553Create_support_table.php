@@ -22,13 +22,13 @@ class M171114024553Create_support_table extends Migration
             'id' => $this->primaryKey()->unsigned()->comment('ID'),
             'user_id' => $this->integer()->unsigned()->notNull()->comment('User ID'),
             'model_id' => $this->integer()->notNull()->comment('Model ID'),
-            'model' => $this->string(100)->notNull()->comment('Model'),
+            'model_class' => $this->string(100)->notNull()->comment('Model Class'),
             'created_at' => $this->integer()->unsigned()->notNull()->comment('Created At'),
             'updated_at' => $this->integer()->unsigned()->notNull()->comment('Updated At'),
         ], $tableOptions);
 
         $this->addForeignKey('{{%support_fk_1}}', '{{%support}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'RESTRICT');
-        $this->createIndex('{{%support_index}}', '{{%support}}', ['model_id', 'model'], false);
+        $this->createIndex('{{%support_index}}', '{{%support}}', ['model_id', 'model_class'], false);
     }
 
     public function safeDown()

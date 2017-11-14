@@ -13,7 +13,7 @@ use yuncms\user\models\User;
  * @property integer $id
  * @property integer $user_id
  * @property integer $model_id
- * @property string $model
+ * @property string $model_class
  * @property integer $created_at
  * @property integer $updated_at
  *
@@ -46,9 +46,9 @@ class Support extends ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'model_id', 'model'], 'required'],
+            [['user_id', 'model_id', 'model_class'], 'required'],
             [['user_id', 'model_id'], 'integer'],
-            [['model'], 'string', 'max' => 100],
+            [['model_class'], 'string', 'max' => 100],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -62,7 +62,7 @@ class Support extends ActiveRecord
             'id' => Yii::t('support', 'ID'),
             'user_id' => Yii::t('support', 'User ID'),
             'model_id' => Yii::t('support', 'Model ID'),
-            'model' => Yii::t('support', 'Model'),
+            'model_class' => Yii::t('support', 'Model Class'),
             'created_at' => Yii::t('support', 'Created At'),
             'updated_at' => Yii::t('support', 'Updated At'),
         ];
