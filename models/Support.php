@@ -3,6 +3,7 @@
 namespace yuncms\support\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yuncms\user\models\User;
@@ -36,7 +37,15 @@ class Support extends ActiveRecord
      */
     public function behaviors()
     {
-        return [TimestampBehavior::className()];
+        return [
+            TimestampBehavior::className(),
+            [
+                'class' => BlameableBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'user_id',
+                ],
+            ]
+        ];
     }
 
 
@@ -46,9 +55,8 @@ class Support extends ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'model_id', 'model_class'], 'required'],
+            [[ 'model_id'], 'required'],
             [['user_id', 'model_id'], 'integer'],
-            [['model_class'], 'string', 'max' => 100],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
