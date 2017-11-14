@@ -17,7 +17,7 @@ use yii\web\UnauthorizedHttpException;
 use yuncms\support\models\Support;
 
 /**
- * Class SupportController
+ * 点赞通用接口
  * @package yuncms\support\frontend\controllers
  */
 class SupportController extends Controller
@@ -49,6 +49,10 @@ class SupportController extends Controller
         ];
     }
 
+    /**
+     * @return array
+     * @throws NotFoundHttpException
+     */
     public function actionCheck()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
