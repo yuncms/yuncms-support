@@ -7,7 +7,7 @@ use yii\db\ActiveQuery;
 /**
  * This is the ActiveQuery class for [[Support]].
  *
- * @see QuestionSupport
+ * @see Support
  */
 class SupportQuery extends ActiveQuery
 {
