@@ -61,7 +61,7 @@ class SupportController extends Controller
 
         $source = null;
         if ($model === 'answer' && Yii::$app->hasModule('question')) {
-            $source = \yuncms\question\models\Answer::findOne($model_id);
+            $source = \yuncms\question\models\QuestionAnswer::findOne($model_id);
         } else if ($model == 'live') {
             $source = \yuncms\live\models\Stream::findOne($model_id);
         } else if ($model == 'article' && Yii::$app->hasModule('article')) {
@@ -94,7 +94,7 @@ class SupportController extends Controller
         } else if ($model == 'question' && Yii::$app->hasModule('question')) {
             $source = \yuncms\question\models\Question::findOne($model_id);
         } else if ($model == 'answer' && Yii::$app->hasModule('question')) {
-            $source = \yuncms\question\models\Answer::findOne($model_id);
+            $source = \yuncms\question\models\QuestionAnswer::findOne($model_id);
         } else if ($model == 'article' && Yii::$app->hasModule('article')) {
             $source = \yuncms\article\models\Article::findOne($model_id);
         } else if ($model == 'live' && Yii::$app->hasModule('live')) {
