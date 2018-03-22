@@ -4,8 +4,8 @@ namespace yuncms\support\models;
 
 use Yii;
 use yii\behaviors\BlameableBehavior;
-use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
+use yuncms\db\ActiveRecord;
 use yuncms\user\models\User;
 
 /**
@@ -17,6 +17,7 @@ use yuncms\user\models\User;
  * @property string $model_class
  * @property integer $created_at
  * @property integer $updated_at
+ * @property ActiveRecord $source
  *
  * @property User $user
  *
@@ -38,9 +39,9 @@ class Support extends ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
             [
-                'class' => BlameableBehavior::className(),
+                'class' => BlameableBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'user_id',
                 ],
@@ -57,7 +58,7 @@ class Support extends ActiveRecord
         return [
             [[ 'model_id'], 'required'],
             [['user_id', 'model_id'], 'integer'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -81,7 +82,38 @@ class Support extends ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSource()
+    {
+        return $this->hasOne($this->model_class, ['id' => 'model_id']);
+    }
+
+    /**
+     * 更新源模型计数器
+     * @param bool $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+        $this->source->updateCountersAsync(['supports' => 1]);
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterDelete()
+    {
+        $this->source->updateCountersAsync(['supports' => -1]);
+        parent::afterDelete();
     }
 
     /**
@@ -92,60 +124,4 @@ class Support extends ActiveRecord
     {
         return new SupportQuery(get_called_class());
     }
-
-//    public function afterFind()
-//    {
-//        parent::afterFind();
-//        // ...custom code here...
-//    }
-
-    /**
-     * @inheritdoc
-     */
-//    public function beforeSave($insert)
-//    {
-//        if (!parent::beforeSave($insert)) {
-//            return false;
-//        }
-//
-//        // ...custom code here...
-//        return true;
-//    }
-
-    /**
-     * @inheritdoc
-     */
-//    public function afterSave($insert, $changedAttributes)
-//    {
-//        parent::afterSave($insert, $changedAttributes);
-//        Yii::$app->queue->push(new ScanTextJob([
-//            'modelId' => $this->getPrimaryKey(),
-//            'modelClass' => get_class($this),
-//            'scenario' => $this->isNewRecord ? 'new' : 'edit',
-//            'category'=>'',
-//        ]));
-//        // ...custom code here...
-//    }
-
-    /**
-     * @inheritdoc
-     */
-//    public function beforeDelete()
-//    {
-//        if (!parent::beforeDelete()) {
-//            return false;
-//        }
-//        // ...custom code here...
-//        return true;
-//    }
-
-    /**
-     * @inheritdoc
-     */
-//    public function afterDelete()
-//    {
-//        parent::afterDelete();
-//
-//        // ...custom code here...
-//    }
 }
