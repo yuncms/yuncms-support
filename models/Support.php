@@ -3,9 +3,12 @@
 namespace yuncms\support\models;
 
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yuncms\db\ActiveRecord;
+use yuncms\notifications\contracts\NotificationInterface;
+use yuncms\notifications\NotificationTrait;
 use yuncms\user\models\User;
 
 /**
@@ -22,8 +25,10 @@ use yuncms\user\models\User;
  * @property User $user
  *
  */
-class Support extends ActiveRecord
+class Support extends ActiveRecord implements NotificationInterface
 {
+    use NotificationTrait;
+
     /**
      * @inheritdoc
      */
@@ -93,12 +98,20 @@ class Support extends ActiveRecord
         return $this->hasOne($this->model_class, ['id' => 'model_id']);
     }
 
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     */
     public function afterSave($insert, $changedAttributes)
     {
         if ($insert) {
             $this->source->updateCountersAsync(['supports' => 1]);
+            try {
+                Yii::$app->notification->send($this->source->user, $this);
+            } catch (InvalidConfigException $e) {
+            }
         }
-        return parent::afterSave($insert, $changedAttributes);
+        parent::afterSave($insert, $changedAttributes);
     }
 
     /**
